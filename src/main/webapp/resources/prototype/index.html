@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>To-do List Index Page</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <style>
+    .container {
+      width: 500px;
+      margin: 0 auto;
+      text-align: center;
+    }
+      table {
+        margin: 0 auto;
+      }
+        table td {
+          text-align: left;
+        }
+        
+        .select-day {
+          background-color: #eee;
+        }
+
+        .sunday {
+          color: red;
+        }
+        .saturday {
+          color: cornflowerblue;
+        }
+
+      
+    .count {
+      display: inline-block;
+    }
+    #plus {
+    }
+
+      .content {
+        border: none;
+
+      }
+        .content:active, .content:focus {
+          border: none;
+          outline: none;
+        }
+      
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="calendar"></section>
+    <section class="todo">
+      <header>
+        <div class="count">
+          <span id="total">오늘의 할 일 8개</span>/<span id="completed">완료한 일 3개</span>
+        </div>
+        <img src="plus.png" alt="" id="plus" width="15px">
+      </header>
+      <div class="todolist">
+        <input type="checkbox" name="is_completed" id="is_completed">
+        <input type="text" name="content" id="content" class="content">
+      </div>
+    </section>
+    <h6>Copyright 2022.서혜원. All rights reserved.</h6>
+  </div>
+</body>
+<script>
+  let calendar = document.querySelector(".calendar");
+
+  var nowDate = new Date();
+
+  function init(year, month) {
+    calendar.innerHTML = "";
+
+    let calendar_code =
+    "<table class='calendar-table'>"+ "<thead class='calendar-title'>" +
+    "<tr><th><button class='prev'><</button></th><th colspan='5'>" + year + "년" + month + "월</th><th><button class='next'>></button></th></tr></thead>" +
+    "<thead class='calendar-week'><th class='sunday'>일</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th class='saturday'>토</th></thead>" +
+    "<tbody class='calendar-date'></tbody>" +
+    "</table>";
+
+    calendar.innerHTML = calendar_code;
+  }
+
+  function calendarDescribe(target, date) {
+    if(date == null || date == undefined) { date = new Date(); }
+
+    nowDate = date;
+
+    let thisMonth = new Date(nowDate.getFullYear(), nowDate.getMonth(), 1);
+    let thisLastDay = new Date(nowDate.getFullYear(), nowDate.getMonth()+1, 0);
+    let year = nowDate.getFullYear();
+    let month = nowDate.getMonth() +1;
+
+    init(year, month);
+
+    let tag = "<tr>";
+    let cnt = 0;
+    
+    for(i = 0; i < thisMonth.getDay(); i++) {
+      tag += "<td></td>";
+      cnt++;
+    }
+
+    for(i = 1; i <= thisLastDay.getDate(); i++) {
+      if(cnt % 7 == 0) { tag += "<tr>"; }
+
+      tag += "<td class='date";
+
+      if(i == nowDate.getDate()) { 
+        tag += " select-day";
+      }
+      if(cnt % 7 == 0) {
+        tag += " sunday";
+      }
+      if(cnt % 7 == 6) {
+        tag += " saturday";
+      }
+
+      tag += "'>" + i + "</td>";
+      cnt++;
+
+      if(cnt % 7 == 0) { tag += "</tr>"; }
+    }
+
+    document.querySelector(".calendar-date").innerHTML = tag;
+
+    let prev = document.querySelector(".prev");
+    let next = document.querySelector(".next");
+    let dates = document.getElementsByTagName("td");
+
+    prev.addEventListener("click", function() {
+      console.log("prev 버튼");
+      nowDate = new Date(nowDate.getFullYear(), nowDate.getMonth() -1, nowDate.getDate());
+      calendarDescribe(calendar, nowDate);
+    });
+
+    next.addEventListener("click", function() {
+      console.log("next 버튼");
+      nowDate = new Date(nowDate.getFullYear(), nowDate.getMonth() +1, nowDate.getDate());
+      calendarDescribe(calendar, nowDate);
+    });
+
+    for(i = 0; i < dates.length; i++) {
+      dates[i].addEventListener("click", function() {
+        console.log("td 클릭");
+        if(document.querySelector(".select-day") != null) {
+          document.querySelector(".select-day").classList.remove('select-day');
+        }
+        this.classList.remove('select-day');
+        this.classList.add('select-day');
+      });
+    }
+  }
+
+calendarDescribe(calendar, nowDate);
+
+</script>
+</html>
