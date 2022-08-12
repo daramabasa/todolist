@@ -53,13 +53,13 @@
     <section class="todo">
       <header>
         <div class="count">
-          <span id="total">오늘의 할 일 8개</span>/<span id="completed">완료한 일 3개</span>
+          오늘의 할 일 <span id="total">0</span>개
+          /
+          완료한 일 <span id="completed">0</span>개
         </div>
         <img src="plus.png" alt="" id="plus" width="15px">
       </header>
       <div class="todolist">
-        <input type="checkbox" name="is_completed" id="is_completed">
-        <input type="text" name="content" id="content" class="content">
       </div>
     </section>
     <h6>Copyright 2022.서혜원. All rights reserved.</h6>
@@ -155,6 +155,39 @@
   }
 
 calendarDescribe(calendar, nowDate);
+
+let plus = document.querySelector("#plus");
+
+plus.addEventListener("click", function() {
+  let add_list = "<div class='list'>" + 
+                "<input type='checkbox' name='is_completed'>" +
+                "<input type='text' name='content' class='content' placeholder='할 일을 입력해주세요.'>" +
+                "<img src='minus.png' alt='' width='15px' class='minus'>" 
+                "</div>";
+  
+  $(".todolist").append(add_list);
+
+  let minus = document.getElementsByClassName("minus");
+
+  for(i = 0; i < minus.length; i++) {
+    minus[i].addEventListener("click", function() {
+      this.parentNode.remove();
+    });
+  }
+
+  $("#total").text($(".todolist").children().length);  
+
+  let completed = document.querySelectorAll("input[name='is_completed']");
+
+  for(i = 0; i < completed.length; i++) {
+    completed[i].addEventListener("click", function() {
+      $("#completed").text(document.querySelectorAll("input[name='is_completed']:checked").length);
+    });
+  }
+
+});
+
+
 
 </script>
 </html>
